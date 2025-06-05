@@ -5,7 +5,7 @@ let cityInput = document.getElementById('cityInput');
 let weatherInfo = document.getElementById('weatherInfo');
 
 serachBtn.addEventListener('click',() => {
-    const city = cityInput.ariaValueMax.trim();
+    const city = cityInput.value.trim();
     if(city){
         getWeather(city);
         getForecast(city);
@@ -18,7 +18,7 @@ serachBtn.addEventListener('click',() => {
 
 async function getWeather(city){
     try {
-        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
+        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${myapiKey}&units=metric`);
         if(!res.ok) throw new Error('City is not found.');
         const data = await res.json();
 
@@ -36,21 +36,27 @@ async function getWeather(city){
 
     async function getForecast(city) {
         try {
-            const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`);
-            if(!res.ok) throw new Error('Forecast data is not found.');      } catch (error) {
-            const data = await res.json();
-            const forecast = data.list.filter(item => item.dt_txt.includes("12:00:00"));
-            let forecastHTML = `<h3>5-Day Forecast</h3><div class="forecast-cards"></div>`;
-
-            forecast.forEach(item =>{
-                forecastHTML += `
-                <div class="forecast-day">
-                    <p>${new Date(item.dt_txt).toLocaleDateString()}</p>
-                    <img src="http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png">
-                    <p>${item.main.temp}°C</p>
-                </div>
-                `;
-            })
+          const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${myapiKey}&units=metric`);
+          if (!res.ok) throw new Error("Forecast data not available");
+          const data = await res.json();
+      
+          const forecast = data.list.filter(item => item.dt_txt.includes("12:00:00"));
+          let forecastHTML = `<h3>5-Day Forecast</h3><div class="forecast-cards">`;
+      
+          forecast.forEach(item => {
+            forecastHTML += `
+              <div class="forecast-day">
+                <p>${new Date(item.dt_txt).toLocaleDateString()}</p>
+                <img src="http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png">
+                <p>${item.main.temp}°C</p>
+              </div>
+            `;
+          });
+      
+          forecastHTML += `</div>`;
+          document.getElementById('forecast').innerHTML = forecastHTML;
+        } catch (error) {
+          document.getElementById('forecast').innerHTML = `<p>${error.message}</p>`;
         }
-    }
-}
+      }
+ }
