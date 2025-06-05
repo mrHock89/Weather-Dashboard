@@ -24,7 +24,7 @@ async function getWeather(city){
 
         weatherInfo.innerHTML = `
         <h2>${data.name}</h2>
-        <p>Temperature: ${data.main.temp}</p>
+        <p>Temperature: ${data.main.temp}°C</p>
         <p>Wind Speed: ${data.wind.speed} m/s</p>
         <img src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="Weather Icon">
         `;
@@ -40,6 +40,7 @@ async function getForecast(city) {
         const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${myapiKey}&units=metric`);
         if (!res.ok) throw new Error("Forecast data not available");
         const data = await res.json();
+        console.log(res);
     
         const forecast = data.list.filter(item => item.dt_txt.includes("12:00:00"));
         let forecastHTML = `<h3>5-Day Forecast</h3><div class="forecast-cards">`;
