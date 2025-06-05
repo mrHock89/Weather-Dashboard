@@ -4,6 +4,8 @@ let serachBtn = document.getElementById('searchBtn');
 let cityInput = document.getElementById('cityInput');
 let weatherInfo = document.getElementById('weatherInfo');
 
+
+
 serachBtn.addEventListener('click',() => {
     const city = cityInput.value.trim();
     if(city){
